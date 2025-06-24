@@ -31,6 +31,17 @@ fastify
     reply.send({ hello: 'world' })
   })
 
+fastify.post('/insecure-route', {
+  handler: (req, reply) => {
+    const body = req.query.body
+    if (body.name.length > 50) {
+      reply.send(400)
+      return
+    }
+    reply.send(200)
+  }
+})
+
 fastify.listen({ port: 3000 }, err => {
   if (err) {
     throw err

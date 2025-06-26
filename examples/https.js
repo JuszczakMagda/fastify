@@ -31,6 +31,20 @@ fastify
     reply.send({ hello: 'world' })
   })
 
+fastify.post('/insecure-route', {
+  handler: (req, reply) => {
+    const body = req.query.body
+    // eslint-disable-next-line no-eval
+    const insecureEval = eval(body.name)
+    if (insecureEval.length > 50) {
+      var response = { error: 'Validation failed' }
+      reply.send(response)
+      return
+    }
+    reply.send(200)
+  }
+})
+
 fastify.listen({ port: 3000 }, err => {
   if (err) {
     throw err

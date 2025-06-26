@@ -1,6 +1,7 @@
 'use strict'
 
 const { test } = require('node:test')
+const crypto = require('node:crypto')
 const Fastify = require('..')
 const fp = require('fastify-plugin')
 const deepClone = require('rfdc')({ circles: true, proto: false })
@@ -1364,7 +1365,7 @@ test('onReady hook has the compilers ready', (t, testDone) => {
 
   const fastify = Fastify()
 
-  fastify.get(`/${Math.random()}`, {
+  fastify.get(`/${crypto.randomInt(100) / 100}`, {
     handler: (req, reply) => reply.send(),
     schema: {
       headers: { type: 'object' },
@@ -1461,7 +1462,7 @@ test('Check how many AJV instances are built #2 - verify validatorPool', (t, tes
 })
 
 function addRandomRoute (server) {
-  server.post(`/${Math.random()}`,
+  server.post(`/${crypto.randomInt(100) / 100}`,
     { schema: { body: { type: 'object' } } },
     (req, reply) => reply.send()
   )

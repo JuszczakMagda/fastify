@@ -4,6 +4,7 @@ const os = require('node:os')
 const path = require('node:path')
 const fs = require('node:fs')
 const { test, before } = require('node:test')
+const crypto = require('node:crypto')
 const Fastify = require('..')
 const helper = require('./helper')
 
@@ -20,7 +21,7 @@ if (os.platform() !== 'win32') {
     const fastify = Fastify()
     t.after(() => fastify.close())
 
-    const sockFile = path.join(os.tmpdir(), `${(Math.random().toString(16) + '0000000').slice(2, 10)}-server.sock`)
+    const sockFile = path.join(os.tmpdir(), `${((crypto.randomInt(100) / 100).toString(16) + '0000000').slice(2, 10)}-server.sock`)
     try {
       fs.unlinkSync(sockFile)
     } catch (e) { }
@@ -35,7 +36,7 @@ if (os.platform() !== 'win32') {
     const fastify = Fastify()
     t.after(() => fastify.close())
 
-    const sockFile = `\\\\.\\pipe\\${(Math.random().toString(16) + '0000000').slice(2, 10)}-server-sock`
+    const sockFile = `\\\\.\\pipe\\${((crypto.randomInt(100) / 100).toString(16) + '0000000').slice(2, 10)}-server-sock`
 
     await fastify.listen({ path: sockFile })
     t.assert.deepStrictEqual(fastify.addresses(), [sockFile])
